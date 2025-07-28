@@ -7,9 +7,9 @@ name: Dart
 
 on:
   push:
-    branches: [ "modernized-wordpress-client" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "modernized-wordpress-client" ]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
+        with:
+          ref: modernized-wordpress-client
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
