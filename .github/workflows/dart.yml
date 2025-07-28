@@ -14,17 +14,43 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-        with:
+    - name: ⬇️ Checkout Repository
+      uses: actions/checkout@v4 # Action to check out your repository code
+      with:
           ref: modernized-wordpress-client
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+      
+
+    - name: ☕ Setup Java Environment
+      uses: actions/setup-java@v4 # Action to set up a Java environment
+      with:
+        distribution: 'temurin' # Recommended OpenJDK distribution (e.g., Adoptium Temurin)
+        java-version: '17'      # Specify the Java version. Android Studio and newer Flutter versions often prefer JDK 11 or 17.
+                                # If you encounter issues, try '11' or '8' based on your project's `build.gradle` requirements.
+        cache: 'gradle'         # Cache Gradle dependencies to speed up builds
+
+    - name: 🚀 Setup Flutter SDK
+      uses: subosito/flutter-action@v2 # Action to set up the Flutter SDK
+      with:
+        channel: 'stable' # Use the 'stable' channel for Flutter (or 'beta', 'dev' if needed)
+        cache: true       # Cache Flutter dependencies to speed up subsequent runs
+
+    - name: 🩺 Run Flutter Doctor
+      run: flutter doctor -v # Verify the Flutter environment setup
+
+    - name: 📦 Get Flutter Dependencies
+      run: flutter pub get # Install all Flutter package dependencies
+
+    - name: 🛠️ Build Android App (APK)
+      # This command builds a debug APK. For release, use 'flutter build appbundle --release'
+      # or 'flutter build apk --release --split-per-abi'
+      run: flutter build apk --release # Builds a debug APK for testing
+      # You might want to build a release appbundle for publishing:
+      # run: flutter build appbundle --release
+
+    - name: ⬆️ Upload Android APK Artifact
+      uses: actions/upload-artifact@v4 # Action to upload the built artifact
+      with:
+        name: android-apk # Name of the artifact
+        path: build/app/outputs/apk/release/app-release.apk # Path to the generated APK file
+        # If building appbundle: path: build/app/outputs/bundle/release/app-release.aab
