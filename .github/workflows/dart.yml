@@ -25,7 +25,7 @@ jobs:
       uses: actions/setup-java@v4 # Action to set up a Java environment
       with:
         distribution: 'temurin' # Recommended OpenJDK distribution (e.g., Adoptium Temurin)
-        java-version: '8'      # Specify the Java version. Android Studio and newer Flutter versions often prefer JDK 11 or 17.
+        java-version: '9'      # Specify the Java version. Android Studio and newer Flutter versions often prefer JDK 11 or 17.
                                 # If you encounter issues, try '11' or '8' based on your project's `build.gradle` requirements.
         cache: 'gradle'         # Cache Gradle dependencies to speed up builds
 
